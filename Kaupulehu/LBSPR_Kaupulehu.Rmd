@@ -1,0 +1,76 @@
+---
+title: "Size Limit"
+author: "Erin Ristig"
+date: "6/26/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(here)
+library(janitor)
+library(LBSPR)
+
+# Read in CSV
+species <- read_csv(here::here("Kaupulehu", "Species_List.csv"))
+test <- read_csv(here::here("Kaupulehu", "test_species.csv"))
+
+```
+
+```{r}
+# Create a new LB_pars Object
+MyPars <- new("LB_pars")
+
+# See slots (elements) of the object
+#slotNames(MyPars)
+
+# Populate the LB_pars Object
+
+test_row <- head(test, 1)
+
+my_function = function(row_dog) 
+  { (MyPars@Linf <- test$Linf
+     MyPars@L50 <- test$L50
+     MyPars@L95 <- test$L95
+     MyPars@MK <- test$MK
+     MyPars@SL50 <- test$SL50
+     MyPars@SL95 <- test$SL95
+     MyPars@SPR <- test$SPR
+     MyPars@BinWidth <- test$BinWidth))
+}
+
+apply(test, 1, )
+
+MyPars@Linf <- species$LINF_TL 
+MyPars@L50 <- 66 
+MyPars@L95 <- 70
+MyPars@MK <- 1.5 
+
+MyPars@SL50 <- 50 
+MyPars@SL95 <- 65
+MyPars@SPR <- 0.4
+MyPars@BinWidth <- 5
+
+# Run the Simulation Model
+MySim <- LBSPRsim(MyPars)
+
+# Plot the Simulation
+plotSim(MySim) 
+
+
+
+
+
+#consumption = function(t, T)
+#{out = (exp(-1*.05*((pmin(t*T/100, T))^2)))*exp(g*t)
+#return(out)}
+
+
+```
+
+
+
