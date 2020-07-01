@@ -17,60 +17,57 @@ library(LBSPR)
 
 # Read in CSV
 species <- read_csv(here::here("Kaupulehu", "Species_List.csv"))
-test <- read_csv(here::here("Kaupulehu", "test_species.csv"))
 
 ```
 
 ```{r}
-# Create a new LB_pars Object
-MyPars <- new("LB_pars")
-
-# See slots (elements) of the object
-#slotNames(MyPars)
-
-# Populate the LB_pars Object
-
-test_row <- head(test, 1)
-
-my_function = function(row_dog) 
-  { (MyPars@Linf <- test$Linf
-     MyPars@L50 <- test$L50
-     MyPars@L95 <- test$L95
-     MyPars@MK <- test$MK
-     MyPars@SL50 <- test$SL50
-     MyPars@SL95 <- test$SL95
-     MyPars@SPR <- test$SPR
-     MyPars@BinWidth <- test$BinWidth))
+sizelimit_function <- function(row) {
+  # Create a new LB_pars object for each species
+  MyPars <- new("LB_pars")
+  
+  MyPars@Linf <- as.numeric(row['Linf'])
+  MyPars@L50 <- as.numeric(row['L50'])
+  MyPars@L95 <- as.numeric(row['L95'])
+  MyPars@MK <- as.numeric(row['MK'])
+  MyPars@SL50 <- as.numeric(row['SL50'])
+  MyPars@SL95 <- as.numeric(row['SL95'])
+  MyPars@SPR <- as.numeric(row['SPR'])
+  MyPars@BinWidth <- as.numeric(row['BinWidth'])
+  
+  MyPars@L_units <- "mm"
+  MyPars@Walpha <- as.numeric(row['LW_A'])
+  MyPars@Walpha_units <- "g"
+  MyPars@Wbeta <- as.numeric(row['LW_B'])
+  MyPars@FecB <- as.numeric(row['LW_B'])
+  
+  MyPars@BinMin <- 0
+  
+  # Run the simulation model for each species
+  MySim <- LBSPRsim(MyPars)
+  #MySim@SPR
+  #MySim@FM
+  
+  # "Print" the results
+  #print(MySim@SPR)
+  #print(MySim@FM)
+  
+  # Plot the simulation for each species
+  plotSim(MySim, lf.type = "pop") 
 }
 
-apply(test, 1, )
+# Apply function to a given species
+apply(species[which(species$Species == 'Naso unicornis_cr'), ], 1, sizelimit_function)
 
-MyPars@Linf <- species$LINF_TL 
-MyPars@L50 <- 66 
-MyPars@L95 <- 70
-MyPars@MK <- 1.5 
+apply(species[which(species$Species == 'Naso unicornis_nr'), ], 1, sizelimit_function)
 
-MyPars@SL50 <- 50 
-MyPars@SL95 <- 65
-MyPars@SPR <- 0.4
-MyPars@BinWidth <- 5
-
-# Run the Simulation Model
-MySim <- LBSPRsim(MyPars)
-
-# Plot the Simulation
-plotSim(MySim) 
-
-
-
-
-
-#consumption = function(t, T)
-#{out = (exp(-1*.05*((pmin(t*T/100, T))^2)))*exp(g*t)
-#return(out)}
-
+# To loop thru all species
+##apply(species, 1, sizelimit_function)
 
 ```
 
+
+```{r}
+class?LB_pars
+```
 
 

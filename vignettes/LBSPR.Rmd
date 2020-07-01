@@ -129,6 +129,8 @@ MyPars@BinWidth <- 5
 Now we are ready to run the LBSPR simulation model. To do this we use the `LBSPRsim` function:
 ```{r}
 MySim <- LBSPRsim(MyPars)
+
+
 ```
 You will notice some messages in the console alerting you that default values have been used.  You can change these by specifying values in `MyPars` and re-running the `LBSPRsim` function.
 

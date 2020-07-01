@@ -6,7 +6,7 @@ Acanthuridae,Ctenochaetus strigosus,0.94,133,,,141,5.551181102,0.5826,-1.1,92,,9
 Acanthuridae,Naso brevirostris,,,0.93,304,327,12.87401575,0.402,-0.21,,250,269,25,0.01065,3.24297,,Kala,Open,14in,None,327,269,270,0.638805047,355.6,356.6,0.4,5
 Acanthuridae,Naso hexacanthus,,,0.88,527,599,23.58267717,0.221,-0.22,,450,511,44,0.0424,2.854,,‘_pelu kala,Open,16in,None,599,511,512,0.692328985,406.4,407.4,0.4,5
 Acanthuridae,Naso lituratus,1,256,,,256,10.07874016,0.3408,-0.66,199,,199,25,0.0497,2.839,Aquarium-regulated,Naso tang,,,,256,199,200,0.753520037,199,200,0.4,5
-Acanthuridae,Naso unicornis_cr,1,480,,,480,18.8976378,0.44,-0.12,355,,355,50,0.01788,3.03545,,Kala,Open,14in,None,480,355,356,0.309313047,355.6,356.6,0.4,5
+Acanthuridae,Naso unicornis,1,480,,,480,18.8976378,0.44,-0.12,355,,355,50,0.01788,3.03545,,Kala,Open,14in,None,480,355,356,0.309313047,355.6,356.6,0.4,5
 Acanthuridae,Zebrasoma flavescens,,,,,180,7.086614173,0.275,-1.2,,118,,41,0.0148,3.16,Aquarium-regulated,Yellow tang,,"To possess more than five yellow tang larger than 4.5 inches total length, or more than five yellow tang smaller than 2 inches total length",,180,0,1,0.593560146,50.8,51.8,0.4,5
 Carangidae,Caranx ignobilis,,,0.87,1838,2113,83.18897638,0.111,0.097,,700,805,11,0.0273,2.913,,Ulua and p_pio,Open,10in; 16in (sale),"20 (total all species, non-commercial only)",2113,805,806,4.907595517,254,255,0.4,5
 Carangidae,Caranx lugubris,0.94,822,,,874,34.40944882,0.12,0,370,,394,12,0.0198,3.001,,Ulua and p_pio,Open,10in; 16in (sale),"20 (total all species, non-commercial only)",874,394,395,4.191757712,254,255,0.4,5
@@ -24,9 +24,7 @@ Mullidae,Mulloidichthys vanicolensis,0.85,227,,,267,10.51181102,1.3,-1.1,175,,20
 Mullidae,Parupeneus multifasciatus,0.9,303,,,337,13.26771654,0.75555,-0.135,148,,164,5,0.01136,3.21082,,Moano,Open,7in,None,337,164,165,1.484525649,177.8,178.8,0.4,5
 Mullidae,Parupeneus porphyreus,0.9,492,,,547,21.53543307,0.538,-0.446,238,,264,6,0.01136,3.21082,,K_m_,Open,10in,None,547,264,265,1.764162631,254,255,0.4,5
 Scaridae,Chlorurus sordidus,1,,0.87,251,289,11.37795276,0.442,-0.756,170,,170,10,0.02431,2.96931,,,,,,289,170,171,1.344885063,170,171,0.4,5
-Scaridae,Scarus psittacus,0.97,,0.78,217,278,10.94488189,1.653,-0.29,190,,196,6,0.01045,3.31871,,Uhu,Open,12in,None,278,196,197,0.574179973,150.51,151.51,0.4,5
+Scaridae,Scarus psittacus,0.97,,0.78,217,278,10.94488189,1.653,-0.29,190,,196,6,0.01045,3.31871,,Uhu,Open,12in,None,278,196,197,0.574179973,304.8,305.8,0.4,5
 Scaridae,Scarus rubroviolaceus,0.91,512,,,563,22.16535433,0.288,-0.809,340,,374,22,0.0136,3.109,,Uhu,Open,12in,None,563,374,375,1.002433972,304.8,305.8,0.4,5
-Serranidae,Cephalopholis argus,,,0.82,,506,19.92125984,0.075,-6.5,,220,268,25,0.02,2.99,Invasive?,,,,,506,268,269,3.42399505,268,269,0.4,5
+Serranidae,Cephalopholis argus,,,0.82,,506,19.92125984,0.075,-6.5,,220,268,25,0.02,2.99,Invasive?,,,,,506,268,269,3.42399505,,1,0.4,5
 Sphyraenidae,Sphyraena barracuda,0.89,1236,,,1389,54.68503937,0.26,-0.71,780,,876,19,0.00617,3.01095,,,,,,1389,876,877,1.269976817,876,877,0.4,5
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Acanthuridae,Naso unicornis_nr,1,480,,,480,18.8976378,0.44,-0.12,355,,355,50,0.01788,3.03545,,Kala,Open,14in,None,480,355,356,0.309313047,400,401,0.4,5
