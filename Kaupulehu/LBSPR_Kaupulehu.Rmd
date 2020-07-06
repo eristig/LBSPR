@@ -17,33 +17,33 @@ library(LBSPR)
 
 # Read in CSV
 species <- read_csv(here::here("Kaupulehu", "Species_List.csv"))
-#test
 ```
 
 ```{r}
-sizelimit_function <- function(row) {
+lh_function <- function(row) {
   # Create a new LB_pars object for each species
   MyPars <- new("LB_pars")
-  
+  MyPars@Species<-row['Species']
   MyPars@Linf <- as.numeric(row['Linf'])
   MyPars@L50 <- as.numeric(row['L50'])
   MyPars@L95 <- as.numeric(row['L95'])
   MyPars@MK <- as.numeric(row['MK'])
-  MyPars@SL50 <- as.numeric(row['SL50'])
-  MyPars@SL95 <- as.numeric(row['SL95'])
-  MyPars@SPR <- as.numeric(row['SPR'])
   MyPars@BinWidth <- as.numeric(row['BinWidth'])
-  
+  MyPars@Steepness<-0.99
   MyPars@L_units <- "mm"
   MyPars@Walpha <- as.numeric(row['LW_A'])
   MyPars@Walpha_units <- "g"
   MyPars@Wbeta <- as.numeric(row['LW_B'])
   MyPars@FecB <- as.numeric(row['LW_B'])
-  
   MyPars@BinMin <- 0
   
+  #Setup place holder values for these parameters, we will change these later
+  MyPars@SL50 <- as.numeric(row['L50'])
+  MyPars@SL95 <- as.numeric(row['L95'])
+  MyPars@FM<-1
+  
   # Run the simulation model for each species
-  MySim <- LBSPRsim(MyPars)
+  #MySim <- LBSPRsim(MyPars)
   #MySim@SPR
   #MySim@FM
   
@@ -52,28 +52,100 @@ sizelimit_function <- function(row) {
   #print(MySim@FM)
   
   # Plot the simulation for each species
-  plotSim(MySim, lf.type = "pop") 
+  #plotSim(MySim, lf.type = "pop") 
+  
+  return(list(MyPars=MyPars, CurrentLc=as.numeric(row['CurrentLc'])))
 }
-
-# Apply function to a given species
-apply(species[which(species$Species == 'Naso unicornis_cr'), ], 1, sizelimit_function)
-
-apply(species[which(species$Species == 'Naso unicornis_nr'), ], 1, sizelimit_function)
-
-# To loop thru all species
-##apply(species, 1, sizelimit_function)
-
 ```
 
 
 ```{r}
-class?LB_pars
+ypr_function<-function(MyParsList, SL_options, FM_options){
+  
+  rw<-NROW(MyParsList)
+  YPR<-list()
+  SPR<-list()
+  
+  for (k in 1:rw){
+    
+    YPR[[k]]<-data.frame()
+    SPR[[k]]<-data.frame()
+    
+    #SL filtering
+    if(!is.na(MyParsList[[k]]$CurrentLc)) {
+      SL_tmp<-round(c(SL_options*MyParsList[[k]]$MyPars@L50, MyParsList[[k]]$CurrentLc),0)
+      SL_names<-c(paste0(SL_options, "Lm"), "Lc current")
+    }
+    if(is.na(MyParsList[[k]]$CurrentLc)) {
+      SL_tmp<-round(SL_options*MyParsList[[k]]$MyPars@L50,0)
+      SL_names<-paste0(SL_options, "Lm")
+    }
+    Keep<-c(SL_tmp < 0.95*MyParsList[[k]]$MyPars@Linf)
+    SL_options_mult<-SL_options[Keep]
+    SL_options_mm<-SL_tmp[Keep]
+    SL_names<-SL_names[Keep]
+    SL_options_inch <- round(SL_options_mm/25.4,1)
+    
+    #Loop over FM options
+    for (i in 1:NROW(FM_options)){
+      
+      tmpYPR<-data.frame()
+      tmpSPR<-data.frame()
+      
+      #loop over Lc options
+      for (j in 1:NROW(SL_options_mm)){
+        tmpPars<-MyParsList[[k]]$MyPars
+        tmpPars@FM<-FM_options[i]
+        tmpPars@SL50 <- SL_options_mm[j]
+        tmpPars@SL95 <- SL_options_mm[j]+1
+        tmpSim <- LBSPRsim(tmpPars, verbose=FALSE)
+        tmpYPR<-rbind(tmpYPR, list(Name=SL_names[j], Lc_mm=SL_options_mm[j], Lc_inch=SL_options_inch[j], Lc_Linf=SL_options_mm[j]/MyParsList[[k]]$MyPars@Linf, FM=FM_options[i], YPR=tmpSim@YPR))
+        tmpSPR<-rbind(tmpSPR, list(Name=SL_names[j], Lc_mm=SL_options_mm[j], Lc_inch=SL_options_inch[j], FM=FM_options[i], SPR=tmpSim@SPR))
+      }
+      
+      #Find SL eumetric
+      LcSeq<-seq(10,0.95*MyParsList[[k]]$MyPars@Linf,5)
+      tmpLc<-data.frame()
+      for (l in 1:NROW(LcSeq)){
+        tmpPars<-MyParsList[[k]]$MyPars
+        tmpPars@FM<-FM_options[i]
+        tmpPars@SL50 <- LcSeq[l]
+        tmpPars@SL95 <-LcSeq[l]+1
+        tmpSim <- LBSPRsim(tmpPars, verbose=FALSE)
+        tmpLc<-rbind(tmpLc, list(Lc=LcSeq[l], SPR=tmpSim@SPR, YPR=tmpSim@YPR))
+      }
+      x<-which.max(tmpLc$YPR)
+      tmpYPR<-rbind(tmpYPR, list(Name="Lc eumetric", Lc_mm=tmpLc$Lc[x], Lc_inch=round(tmpLc$Lc[x]/25.4,1), Lc_Linf=tmpLc$Lc[x]/MyParsList[[k]]$MyPars@Linf, FM=FM_options[i], YPR=tmpLc$YPR[x]))
+      tmpSPR<-rbind(tmpSPR, list(Name="Lc eumetric", Lc_mm=tmpLc$Lc[x], Lc_inch=round(tmpLc$Lc[x]/25.4,1), FM=FM_options[i], SPR=tmpLc$SPR[x]))                   
+      tmpYPR$YPR<-tmpYPR$YPR/tmpYPR$YPR[tmpYPR$Name=="Lc eumetric"]
+      
+      #Save to master list
+      YPR[[k]]<-rbind(YPR[[k]], tmpYPR)
+      SPR[[k]]<-rbind(SPR[[k]], tmpSPR)
+    }
+    
+  }
+  return(list(YPR=YPR, SPR=SPR))
+}
 ```
 
-```{r Peyton's comments}
 
-#hey erin 
+```{r}
+#Conduct size limit analysis
 
+#Get list of species included in analysis
+speciesUse<-subset(species, species$Use)
+
+#Create life history pars for each species
+MyParsList<-apply(speciesUse, 1, lh_function)
+MyParsList<-apply(speciesUse[which(species$Species == 'Naso unicornis'), ], 1, lh_function)
+
+#YPR and SPR analysis
+SL_options<-c(0.9, 1, 1.1, 1.2, 1.3)
+FM_options<-c(0.5, 1, 2, 3)
+output<-ypr_function(MyParsList, SL_options, FM_options)
+output
 
 ```
+
 
