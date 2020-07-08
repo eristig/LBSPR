@@ -1,30 +1,30 @@
-Family,Species,TL_TO_FL,LINF_FL,TL_TO_SL,LINF_SL,LINF_TL (mm),LINF_TL (in),K,T0,LMAT_FL,LMAT_SL,LMAT_TL,LONG,LW_A,LW_B,Type,Common Name,Season,Minimum Size,Bag Limit,Linf,L50,L95,MK,SL50,SL95,SPR,BinWidth,Use,CurrentLc
-Acanthuridae,Acanthurus blochii,,,0.76,276,363,14.29133858,0.25,-0.38,,210,276,35,0.02506,3.03193,Aquarium?,,,,,363,276,277,0.75474649,276,277,0.4,5,TRUE,
-Acanthuridae,Acanthurus dussumieri,,,0.83,308,371,14.60629921,0.296,-0.29,,234,282,28,0.0251,3.032,Aquarium?,,,,,371,282,283,0.782022001,282,283,0.4,5,TRUE,
-Acanthuridae,Acanthurus xanthopterus,,,0.74,426,576,22.67716535,0.287,-0.21,,367,496,34,0.02673,2.98449,Aquarium?,,,,,576,496,497,0.67513536,496,497,0.4,5,TRUE,
-Acanthuridae,Ctenochaetus strigosus,0.94,133,,,141,5.551181102,0.5826,-1.1,92,,98,18,0.0022,3,Aquarium-regulated,Kole,,,,141,98,99,0.595535074,98,99,0.4,5,TRUE,
-Acanthuridae,Naso brevirostris,,,0.93,304,327,12.87401575,0.402,-0.21,,250,269,25,0.01065,3.24297,,kala lolo,Open,,None,327,269,270,0.638805047,269,270,0.4,5,TRUE,
-Acanthuridae,Naso hexacanthus,,,0.88,527,599,23.58267717,0.221,-0.22,,450,511,44,0.0424,2.854,,Opelu kala,Open,16in,None,599,511,512,0.692328985,406.4,407.4,0.4,5,TRUE,406
-Acanthuridae,Naso lituratus,1,256,,,256,10.07874016,0.3408,-0.66,199,,199,25,0.0497,2.839,Aquarium-regulated,Naso tang,,,,256,199,200,0.753520037,199,200,0.4,5,TRUE,
-Acanthuridae,Naso unicornis,1,480,,,480,18.8976378,0.44,-0.12,355,,355,50,0.01788,3.03545,,Kala,Open,14in,None,480,355,356,0.309313047,355.6,356.6,0.4,5,TRUE,356
-Acanthuridae,Zebrasoma flavescens,,,,,180,7.086614173,0.275,-1.2,,118,,41,0.0148,3.16,Aquarium-regulated,Yellow tang,,"To possess more than five yellow tang larger than 4.5 inches total length, or more than five yellow tang smaller than 2 inches total length",,180,0,1,0.593560146,50.8,51.8,0.4,5,TRUE,
-Carangidae,Caranx ignobilis,,,0.87,1838,2113,83.18897638,0.111,0.097,,700,805,11,0.0273,2.913,,Ulua and p_pio,Open,10in; 16in (sale),"20 (total all species, non-commercial only)",2113,805,806,4.907595517,254,255,0.4,5,TRUE,254
-Carangidae,Caranx lugubris,0.94,822,,,874,34.40944882,0.12,0,370,,394,12,0.0198,3.001,,Ulua and p_pio,Open,10in; 16in (sale),"20 (total all species, non-commercial only)",874,394,395,4.191757712,254,255,0.4,5,TRUE,254
-Carangidae,Caranx melampygus,,,0.84,897,1068,42.04724409,0.233,-0.044,,400,476,7,0.0242,2.941,,Ulua and p_pio,Open,10in; 16in (sale),"20 (total all species, non-commercial only)",1068,476,477,3.537054192,254,255,0.4,5,TRUE,254
-Carangidae,Caranx sexfasciatus,0.9,800,0.83,,889,35,0.24,0,,420,506,11,0.0198,2.986,,Ulua and p_pio,Open,10in; 16in (sale),"20 (total all species, non-commercial only)",889,506,507,2.269762927,254,255,0.4,5,TRUE,254
-Carangidae,Elagatis bipinnulata,0.84,975,,,1161,45.70866142,0.6,0,640,,762,13,0.0135,2.92,,,,,,1161,762,763,0.779083629,762,763,0.4,5,TRUE,
-Carangidae,Pseudocaranx dentex,0.9,1232,,,1369,53.8976378,0.307,-0.77,,,289,7,0.0271,2.88598,,,,,,1369,289,290,2.684474354,289,290,0.4,5,TRUE,
-Carangidae,Seriola dumerili,,,,,1272,50.07874016,0.2272,-0.7931,,,910,15,0.024,2.86,,,,,,1272,910,911,1.804677148,910,911,0.4,5,TRUE,
-Holocentridae,Myripristis berndti,,,0.78,211,271,10.66929134,0.1475,-4.4786,,,175,27,0.02769,3.00336,,,,,,271,175,176,1.622505625,175,176,0.4,5,TRUE,
-Lutjanidae,Aprion virescens,0.92,709,,,771,30.35433071,0.372,-0.51,450,,489,31,0.1944,2.40412,,,,,,771,489,490,0.566861795,489,490,0.4,5,TRUE,
-Lutjanidae,Lutjanus kasmira,,,,,340,13.38582677,0.29,-1.37,,,200,8,0.00842,3.24696,,,,,,340,200,201,2.514658494,200,201,0.4,5,TRUE,
-Mugilidae,Mugil cephalus,,,,,609,23.97637795,0.3,-0.14,,,325,13,0.01085,3.089,,"?Ama?ama, pua (striped mullet)",Closed December-March,11in,None,609,325,326,1.558167257,279.4,280.4,0.4,5,TRUE,279
-Mullidae,Mulloidichthys flavolineatus,0.92,342,,,372,14.64566929,0.564,-0.36,183,,199,6,0.0087,3.21,,Weke (?_) and ?oama (?oama are weke under 7?),Open,7in (sale),50 ?oama,372,199,200,1.682835985,177.8,178.8,0.4,5,TRUE,
-Mullidae,Mulloidichthys vanicolensis,0.85,227,,,267,10.51181102,1.3,-1.1,175,,206,5,0.0167,2.96,,,,,,267,206,207,0.862794888,206,207,0.4,5,TRUE,
-Mullidae,Parupeneus multifasciatus,0.9,303,,,337,13.26771654,0.75555,-0.135,148,,164,5,0.01136,3.21082,,Moano,Open,7in,None,337,164,165,1.484525649,177.8,178.8,0.4,5,TRUE,179
-Mullidae,Parupeneus porphyreus,0.9,492,,,547,21.53543307,0.538,-0.446,238,,264,6,0.01136,3.21082,,K_m_,Open,10in,None,547,264,265,1.764162631,254,255,0.4,5,TRUE,254
-Scaridae,Chlorurus sordidus,1,,0.87,251,289,11.37795276,0.442,-0.756,170,,170,10,0.02431,2.96931,,,,,,289,170,171,1.344885063,170,171,0.4,5,TRUE,
-Scaridae,Scarus psittacus,0.97,,0.78,217,278,10.94488189,1.653,-0.29,190,,196,6,0.01045,3.31871,,Uhu,Open,12in,None,278,196,197,0.574179973,304.8,305.8,0.4,5,TRUE,305
-Scaridae,Scarus rubroviolaceus,0.91,512,,,563,22.16535433,0.288,-0.809,340,,374,22,0.0136,3.109,,Uhu,Open,12in,None,563,374,375,1.002433972,304.8,305.8,0.4,5,TRUE,305
-Serranidae,Cephalopholis argus,,,0.82,,506,19.92125984,0.075,-6.5,,220,268,25,0.02,2.99,Invasive?,,,,,506,268,269,3.42399505,,1,0.4,5,TRUE,
-Sphyraenidae,Sphyraena barracuda,0.89,1236,,,1389,54.68503937,0.26,-0.71,780,,876,19,0.00617,3.01095,,,,,,1389,876,877,1.269976817,876,877,0.4,5,TRUE,
+Family,Species,TL_TO_FL,LINF_FL,TL_TO_SL,LINF_SL,LINF_TL (mm),LINF_TL (in),K,T0,LMAT_FL,LMAT_SL,LMAT_TL,LONG,LW_A,LW_B,Type,Common Name,Season,Minimum Size,Bag Limit,Linf,L50,L95,MK,SL50,SL95,SPR,BinWidth,Use,CurrentLc,Nadon_TL_UVS,Nadon_TL_COM,Nadon_F,Nadon_M,Nadon_F/M,Avg_F/M,
+Acanthuridae,Acanthurus blochii,,,0.76,276,363,14.29133858,0.25,-0.38,,210,276,35,0.02506,3.03193,Aquarium?,,,,,363,276,277,0.75474649,276,277,0.4,5,TRUE,,301,,0.27,0.09,3,,
+Acanthuridae,Acanthurus dussumieri,,,0.83,308,371,14.60629921,0.296,-0.29,,234,282,28,0.0251,3.032,Aquarium?,,,,,371,282,283,0.782022001,282,283,0.4,5,TRUE,,323,334,0.18,0.11,1.636363636,,
+Acanthuridae,Acanthurus xanthopterus,,,0.74,426,576,22.67716535,0.287,-0.21,,367,496,34,0.02673,2.98449,Aquarium?,,,,,576,496,497,0.67513536,496,497,0.4,5,TRUE,,,,,,,2.221139971,Surgeonfish
+Lutjanidae,Aprion virescens,0.92,709,,,771,30.35433071,0.372,-0.51,450,,489,31,0.1944,2.40412,,,,,,771,489,490,0.566861795,489,490,0.4,5,TRUE,,579,611,0.23,0.12,1.916666667,,
+Carangidae,Caranx ignobilis,,,0.87,1838,2113,83.18897638,0.111,0.097,,700,805,11,0.0273,2.913,,Ulua and p_pio,Open,10in; 16in (sale),"20 (total all species, non-commercial only)",2113,805,806,4.907595517,254,255,0.4,5,TRUE,254,,769,0.3,0.27,1.111111111,,
+Carangidae,Caranx lugubris,0.94,822,,,874,34.40944882,0.12,0,370,,394,12,0.0198,3.001,,Ulua and p_pio,Open,10in; 16in (sale),"20 (total all species, non-commercial only)",874,394,395,4.191757712,254,255,0.4,5,TRUE,254,,,,,,0.727734711,Jack
+Carangidae,Caranx melampygus,,,0.84,897,1068,42.04724409,0.233,-0.044,,400,476,7,0.0242,2.941,,Ulua and p_pio,Open,10in; 16in (sale),"20 (total all species, non-commercial only)",1068,476,477,3.537054192,254,255,0.4,5,TRUE,254,433,545,0.16,0.43,0.372093023,,
+Carangidae,Caranx sexfasciatus,0.9,800,0.83,,889,35,0.24,0,,420,506,11,0.0198,2.986,,Ulua and p_pio,Open,10in; 16in (sale),"20 (total all species, non-commercial only)",889,506,507,2.269762927,254,255,0.4,5,TRUE,254,,,,,,0.727734711,
+Serranidae,Cephalopholis argus,,,0.82,,506,19.92125984,0.075,-6.5,,220,268,25,0.02,2.99,Invasive?,,,,,506,268,269,3.42399505,,1,0.4,5,TRUE,,380,409,0.01,0.12,0.083333333,,
+Scaridae,Chlorurus sordidus,1,,0.87,251,289,11.37795276,0.442,-0.756,170,,170,10,0.02431,2.96931,,,,,,289,170,171,1.344885063,170,171,0.4,5,TRUE,,,,,,,0.874285714,Parrotfish
+Acanthuridae,Ctenochaetus strigosus,0.94,133,,,141,5.551181102,0.5826,-1.1,92,,98,18,0.0022,3,Aquarium-regulated,Kole,,,,141,98,99,0.595535074,98,99,0.4,5,TRUE,,,,,,,2.221139971,
+Carangidae,Elagatis bipinnulata,0.84,975,,,1161,45.70866142,0.6,0,640,,762,13,0.0135,2.92,,,,,,1161,762,763,0.779083629,762,763,0.4,5,TRUE,,,,,,,0.727734711,
+Lutjanidae,Lutjanus kasmira,,,,,340,13.38582677,0.29,-1.37,,,200,8,0.00842,3.24696,,,,,,340,200,201,2.514658494,200,201,0.4,5,TRUE,,275,264,0.36,0.37,0.972972973,,
+Mugilidae,Mugil cephalus,,,,,609,23.97637795,0.3,-0.14,,,325,13,0.01085,3.089,,"?Ama?ama, pua (striped mullet)",Closed December-March,11in,None,609,325,326,1.558167257,279.4,280.4,0.4,5,TRUE,279,,,,,,,
+Mullidae,Mulloidichthys flavolineatus,0.92,342,,,372,14.64566929,0.564,-0.36,183,,199,6,0.0087,3.21,,Weke (?_) and ?oama (?oama are weke under 7?),Open,7in (sale),50 ?oama,372,199,200,1.682835985,177.8,178.8,0.4,5,TRUE,,,313,0.42,0.5,0.84,,
+Mullidae,Mulloidichthys vanicolensis,0.85,227,,,267,10.51181102,1.3,-1.1,175,,206,5,0.0167,2.96,,,,,,267,206,207,0.862794888,206,207,0.4,5,TRUE,,236,268,0.01,0.6,0.016666667,,
+Holocentridae,Myripristis berndti,,,0.78,211,271,10.66929134,0.1475,-4.4786,,,175,27,0.02769,3.00336,,,,,,271,175,176,1.622505625,175,176,0.4,5,TRUE,,222,,0.04,0.11,0.363636364,,
+Acanthuridae,Naso brevirostris,,,0.93,304,327,12.87401575,0.402,-0.21,,250,269,25,0.01065,3.24297,,kala lolo,Open,,None,327,269,270,0.638805047,269,270,0.4,5,TRUE,,271,,0.11,0.12,0.916666667,,
+Acanthuridae,Naso hexacanthus,,,0.88,527,599,23.58267717,0.221,-0.22,,450,511,44,0.0424,2.854,,Opelu kala,Open,16in,None,599,511,512,0.692328985,406.4,407.4,0.4,5,TRUE,406,,466,0.13,0.07,1.857142857,,
+Acanthuridae,Naso lituratus,1,256,,,256,10.07874016,0.3408,-0.66,199,,199,25,0.0497,2.839,Aquarium-regulated,Naso tang,,,,256,199,200,0.753520037,199,200,0.4,5,TRUE,,277,289,0.21,0.12,1.75,,
+Acanthuridae,Naso unicornis,1,480,,,480,18.8976378,0.44,-0.12,355,,355,50,0.01788,3.03545,,Kala,Open,14in,None,480,355,356,0.309313047,355.6,356.6,0.4,5,TRUE,356,344,,0.25,0.06,4.166666667,,
+Mullidae,Parupeneus multifasciatus,0.9,303,,,337,13.26771654,0.75555,-0.135,148,,164,5,0.01136,3.21082,,Moano,Open,7in,None,337,164,165,1.484525649,177.8,178.8,0.4,5,TRUE,179,,,,,,1.165555556,Goatfish
+Mullidae,Parupeneus porphyreus,0.9,492,,,547,21.53543307,0.538,-0.446,238,,264,6,0.01136,3.21082,,K_m_,Open,10in,None,547,264,265,1.764162631,254,255,0.4,5,TRUE,254,,334,1.32,0.5,2.64,,
+Carangidae,Pseudocaranx dentex,0.9,1232,,,1369,53.8976378,0.307,-0.77,,,289,7,0.0271,2.88598,,,,,,1369,289,290,2.684474354,289,290,0.4,5,TRUE,,,,,,,0.727734711,
+Scaridae,Scarus psittacus,0.97,,0.78,217,278,10.94488189,1.653,-0.29,190,,196,6,0.01045,3.31871,,Uhu,Open,12in,None,278,196,197,0.574179973,304.8,305.8,0.4,5,TRUE,305,269,,0.16,0.5,0.32,,
+Scaridae,Scarus rubroviolaceus,0.91,512,,,563,22.16535433,0.288,-0.809,340,,374,22,0.0136,3.109,,Uhu,Open,12in,None,563,374,375,1.002433972,304.8,305.8,0.4,5,TRUE,305,379,,0.2,0.14,1.428571429,,
+Carangidae,Seriola dumerili,,,,,1272,50.07874016,0.2272,-0.7931,,,910,15,0.024,2.86,,,,,,1272,910,911,1.804677148,910,911,0.4,5,TRUE,,,740,0.14,0.2,0.7,,
+Sphyraenidae,Sphyraena barracuda,0.89,1236,,,1389,54.68503937,0.26,-0.71,780,,876,19,0.00617,3.01095,,,,,,1389,876,877,1.269976817,876,877,0.4,5,TRUE,,,,,,,,
+Acanthuridae,Zebrasoma flavescens,,,,,180,7.086614173,0.275,-1.2,,118,,41,0.0148,3.16,Aquarium-regulated,Yellow tang,,"To possess more than five yellow tang larger than 4.5 inches total length, or more than five yellow tang smaller than 2 inches total length",,180,0,1,0.593560146,50.8,51.8,0.4,5,TRUE,,,,,,,2.221139971,
