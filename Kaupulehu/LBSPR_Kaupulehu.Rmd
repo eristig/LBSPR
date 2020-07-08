@@ -109,25 +109,26 @@ ypr_function<-function(MyParsList, SL_options, FM_options){
       }
       
       #Find SL eumetric
-      LcSeq<-seq(10,0.95*MyParsList[[k]]$MyPars@Linf,5)
-      tmpLc<-data.frame()
-      for (l in 1:NROW(LcSeq)){
-        tmpPars<-MyParsList[[k]]$MyPars
-        tmpPars@FM<-FM_options[i]
-        tmpPars@SL50 <- LcSeq[l]
-        tmpPars@SL95 <-LcSeq[l]+1
-        tmpSim <- LBSPRsim(tmpPars, verbose=FALSE)
-        tmpLc<-rbind(tmpLc, list(Lc=LcSeq[l], SPR=tmpSim@SPR, YPR=tmpSim@YPR))
-      }
-      x<-which.max(tmpLc$YPR)
-      tmpYPR<-rbind(tmpYPR, list(Name="Lc eumetric", Lc_mm=tmpLc$Lc[x], Lc_inch=round(tmpLc$Lc[x]/25.4,1), Lc_Linf=tmpLc$Lc[x]/MyParsList[[k]]$MyPars@Linf, FM=FM_options[i], YPR=tmpLc$YPR[x]))
-      tmpSPR<-rbind(tmpSPR, list(Name="Lc eumetric", Lc_mm=tmpLc$Lc[x], Lc_inch=round(tmpLc$Lc[x]/25.4,1), FM=FM_options[i], SPR=tmpLc$SPR[x]))                   
-      tmpYPR$YPR<-tmpYPR$YPR/tmpYPR$YPR[tmpYPR$Name=="Lc eumetric"]
-      
+      #LcSeq<-seq(10,0.95*MyParsList[[k]]$MyPars@Linf,5)
+      #tmpLc<-data.frame()
+      #for (l in 1:NROW(LcSeq)){
+      #  tmpPars<-MyParsList[[k]]$MyPars
+      #  tmpPars@FM<-FM_options[i]
+      #  tmpPars@SL50 <- LcSeq[l]
+      #  tmpPars@SL95 <-LcSeq[l]+1
+      #  tmpSim <- LBSPRsim(tmpPars, verbose=FALSE)
+      #  tmpLc<-rbind(tmpLc, list(Lc=LcSeq[l], SPR=tmpSim@SPR, YPR=tmpSim@YPR))
+      #}
+      #x<-which.max(tmpLc$YPR)
+      #tmpYPR<-rbind(tmpYPR, list(Name="Lc eumetric", Lc_mm=tmpLc$Lc[x], Lc_inch=round(tmpLc$Lc[x]/25.4,1), Lc_Linf=tmpLc$Lc[x]/MyParsList[[k]]$MyPars@Linf, FM=FM_options[i], YPR=tmpLc$YPR[x]))
+      #tmpSPR<-rbind(tmpSPR, list(Name="Lc eumetric", Lc_mm=tmpLc$Lc[x], Lc_inch=round(tmpLc$Lc[x]/25.4,1), FM=FM_options[i], SPR=tmpLc$SPR[x]))                       tmpYPR$YPR<-tmpYPR$YPR/tmpYPR$YPR[tmpYPR$Name=="Lc eumetric"]
+    
       #Save to master list
       YPR[[k]]<-rbind(YPR[[k]], tmpYPR)
       SPR[[k]]<-rbind(SPR[[k]], tmpSPR)
     }
+    
+    YPR[[k]]$YPR<-YPR[[k]]$YPR/max(YPR[[k]]$YPR)
     
   }
   return(list(YPR=YPR, SPR=SPR))
@@ -150,6 +151,39 @@ SL_options<-c(0.9, 1, 1.1, 1.2, 1.3)
 FM_options<-c(0.5, 1, 2, 3)
 output<-ypr_function(MyParsList, SL_options, FM_options) 
 output
+
+
+###################
+#How about this?
+SPR<-output$SPR[[1]] 
+SPR_wide<-SPR %>% 
+  pivot_wider(id_cols=c(Name, Lc_mm, Lc_inch), names_from = FM, values_from = SPR)
+options(knitr.kable.NA = "")
+
+kable(SPR_wide, align = "llcccc", digits = 3) %>% 
+  kable_styling(bootstrap_options = "striped", 
+                full_width = TRUE,
+                position = "left"
+                ) %>% 
+  add_header_above(c("", "Size Limit" = 2, "F/M Value" = 4)) %>% 
+  add_header_above(c("Naso unicornis - SPR Values" = 7), align="l") %>% 
+  column_spec(1, bold = TRUE)
+
+YPR<-output$YPR[[1]] 
+YPR_wide<-YPR %>% 
+  pivot_wider(id_cols=c(Name, Lc_mm, Lc_inch), names_from = FM, values_from = YPR)
+options(knitr.kable.NA = "")
+
+kable(YPR_wide, align = "llcccc", digits = 3) %>% 
+  kable_styling(bootstrap_options = "striped", 
+                full_width = TRUE,
+                position = "left"
+                ) %>% 
+  add_header_above(c("", "Size Limit" = 2, "F/M Value" = 4)) %>% 
+  add_header_above(c("Naso unicornis - Relative YPR Values" = 7), align="l") %>% 
+  column_spec(1, bold = TRUE)
+###############
+
 
 # SPR data converted to data frame
 SPR <- as.data.frame(do.call(rbind, output$SPR[1])) %>% 
