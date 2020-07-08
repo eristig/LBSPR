@@ -52,10 +52,13 @@ lh_function <- function(row) {
   #print(MySim@FM)
   
   # Plot the simulation for each species
-  #plotSim(MySim, lf.type = "pop") 
+  #plotSim(lh_function) 
   
   return(list(MyPars=MyPars, CurrentLc=as.numeric(row['CurrentLc'])))
+
 }
+
+
 ```
 
 
@@ -143,9 +146,23 @@ MyParsList<-apply(speciesUse[which(species$Species == 'Naso unicornis'), ], 1, l
 #YPR and SPR analysis
 SL_options<-c(0.9, 1, 1.1, 1.2, 1.3)
 FM_options<-c(0.5, 1, 2, 3)
-output<-ypr_function(MyParsList, SL_options, FM_options)
+output<-ypr_function(MyParsList, SL_options, FM_options) 
 output
 
+YPR <- as.data.frame(do.call(rbind, output$YPR[1]))
+SPR <- as.data.frame(do.call(rbind, output$SPR[1])) %>% 
+  select(-c(Name)) %>% 
+  separate(FM, into = 0.5, 1, 2, 3)
 ```
+
+## Methods
+
+Variable F/M was determined based on F & M data from the Nadon et al. paper "Length-Based Assessment of Coral Reef Fish Populations in the Main and Northwestern Hawaiian Islands." Eleven species 
+
+
+```{r}
+
+```
+
 
 
