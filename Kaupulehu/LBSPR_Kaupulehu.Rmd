@@ -14,6 +14,8 @@ library(tidyverse)
 library(here)
 library(janitor)
 library(LBSPR)
+library(dplyr)
+library(kableExtra)
 
 # Read in CSV
 species <- read_csv(here::here("Kaupulehu", "Species_List.csv"))
@@ -149,10 +151,27 @@ FM_options<-c(0.5, 1, 2, 3)
 output<-ypr_function(MyParsList, SL_options, FM_options) 
 output
 
-YPR <- as.data.frame(do.call(rbind, output$YPR[1]))
+# SPR data converted to data frame
 SPR <- as.data.frame(do.call(rbind, output$SPR[1])) %>% 
-  select(-c(Name)) %>% 
-  separate(FM, into = 0.5, 1, 2, 3)
+  select(-c(Name)) 
+# SPR dataframe columns rearranged
+SPR_wide <- SPR %>% 
+  pivot_wider(names_from = FM, values_from = SPR) %>% 
+  arrange(Lc_mm) %>% 
+  rename("mm" = Lc_mm, "in" = Lc_inch)
+
+# SPR dataframe converted to visually appealing table
+options(knitr.kable.NA = "")
+
+kable(SPR_wide, align = "llcccc", digits = 3) %>% 
+  kable_styling(bootstrap_options = "striped", 
+                full_width = TRUE,
+                position = "left"
+                ) %>% 
+  add_header_above(c("Size Limit" = 2, "F/M Value" = 4)) %>% 
+  add_header_above(c("Naso unicornis - SPR Values" = 6)) %>% 
+  column_spec(1:2, bold = TRUE)
+
 ```
 
 ## Methods
