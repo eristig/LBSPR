@@ -70,20 +70,22 @@ ypr_function<-function(MyParsList, SL_options, FM_options){
   rw<-NROW(MyParsList)
   YPR<-list()
   SPR<-list()
+  EU<-list()
   
   for (k in 1:rw){
     
     YPR[[k]]<-data.frame()
     SPR[[k]]<-data.frame()
+    EU[[k]]<-list()
     
     #SL filtering
     if(!is.na(MyParsList[[k]]$CurrentLc)) {
       SL_tmp<-round(c(SL_options*MyParsList[[k]]$MyPars@L50, MyParsList[[k]]$CurrentLc),0)
-      SL_names<-c(paste0(SL_options, "Lm"), "Lc current")
+      SL_names<-c(paste0(SL_options, " x Lm"), "Current size limit")
     }
     if(is.na(MyParsList[[k]]$CurrentLc)) {
       SL_tmp<-round(SL_options*MyParsList[[k]]$MyPars@L50,0)
-      SL_names<-paste0(SL_options, "Lm")
+      SL_names<-paste0(SL_options, " x Lm")
     }
     Keep<-c(SL_tmp < 0.95*MyParsList[[k]]$MyPars@Linf)
     SL_options_mult<-SL_options[Keep]
@@ -93,10 +95,8 @@ ypr_function<-function(MyParsList, SL_options, FM_options){
     
     #Loop over FM options
     for (i in 1:NROW(FM_options)){
-      
       tmpYPR<-data.frame()
       tmpSPR<-data.frame()
-      
       #loop over Lc options
       for (j in 1:NROW(SL_options_mm)){
         tmpPars<-MyParsList[[k]]$MyPars
@@ -107,104 +107,60 @@ ypr_function<-function(MyParsList, SL_options, FM_options){
         tmpYPR<-rbind(tmpYPR, list(Name=SL_names[j], Lc_mm=SL_options_mm[j], Lc_inch=SL_options_inch[j], Lc_Linf=SL_options_mm[j]/MyParsList[[k]]$MyPars@Linf, FM=FM_options[i], YPR=tmpSim@YPR))
         tmpSPR<-rbind(tmpSPR, list(Name=SL_names[j], Lc_mm=SL_options_mm[j], Lc_inch=SL_options_inch[j], FM=FM_options[i], SPR=tmpSim@SPR))
       }
-      
-      #Find SL eumetric
-      #LcSeq<-seq(10,0.95*MyParsList[[k]]$MyPars@Linf,5)
-      #tmpLc<-data.frame()
-      #for (l in 1:NROW(LcSeq)){
-      #  tmpPars<-MyParsList[[k]]$MyPars
-      #  tmpPars@FM<-FM_options[i]
-      #  tmpPars@SL50 <- LcSeq[l]
-      #  tmpPars@SL95 <-LcSeq[l]+1
-      #  tmpSim <- LBSPRsim(tmpPars, verbose=FALSE)
-      #  tmpLc<-rbind(tmpLc, list(Lc=LcSeq[l], SPR=tmpSim@SPR, YPR=tmpSim@YPR))
-      #}
-      #x<-which.max(tmpLc$YPR)
-      #tmpYPR<-rbind(tmpYPR, list(Name="Lc eumetric", Lc_mm=tmpLc$Lc[x], Lc_inch=round(tmpLc$Lc[x]/25.4,1), Lc_Linf=tmpLc$Lc[x]/MyParsList[[k]]$MyPars@Linf, FM=FM_options[i], YPR=tmpLc$YPR[x]))
-      #tmpSPR<-rbind(tmpSPR, list(Name="Lc eumetric", Lc_mm=tmpLc$Lc[x], Lc_inch=round(tmpLc$Lc[x]/25.4,1), FM=FM_options[i], SPR=tmpLc$SPR[x]))                       tmpYPR$YPR<-tmpYPR$YPR/tmpYPR$YPR[tmpYPR$Name=="Lc eumetric"]
-    
       #Save to master list
       YPR[[k]]<-rbind(YPR[[k]], tmpYPR)
       SPR[[k]]<-rbind(SPR[[k]], tmpSPR)
     }
-    
     YPR[[k]]$YPR<-YPR[[k]]$YPR/max(YPR[[k]]$YPR)
     
+    #Eumetric analysis
+    Lc<-seq(0.1*MyParsList[[k]]$MyPars@L50,0.95*MyParsList[[k]]$MyPars@Linf,5)
+    F_M<-seq(0, 4, 0.1)
+    
+      #x = seq(0, 1, length.out = nrow(z)),
+      #y = seq(0, 1, length.out = ncol(z)),
+      #z
+    
+    SPR_EU<-matrix(nrow=NROW(F_M), ncol=NROW(Lc))
+    YPR_EU<-matrix(nrow=NROW(F_M), ncol=NROW(Lc))
+    for (i in 1:NROW(F_M)){
+      for (j in 1:NROW(Lc)){
+        tmpPars<-MyParsList[[k]]$MyPars
+        tmpPars@FM<-F_M[i]
+        tmpPars@SL50 <- Lc[j]
+        tmpPars@SL95 <-Lc[j]+1
+        tmpSim <- LBSPRsim(tmpPars, verbose=FALSE)
+        SPR_EU[i,j]=tmpSim@SPR
+        YPR_EU[i,j]=tmpSim@YPR
+      }
+    }
+    x<-which(YPR_EU==max(YPR_EU), arr.ind=TRUE)
+    YPR_EU<-YPR_EU/YPR_EU[x[1],x[2]]
+    EU[[k]]$SPR_EU<-SPR_EU
+    EU[[k]]$YPR_EU<-YPR_EU
+    EU[[k]]$Lc<-Lc
+    EU[[k]]$F_M<-F_M
+    EU[[k]]$L50<-MyParsList[[k]]$MyPars@L50
+    
   }
-  return(list(YPR=YPR, SPR=SPR))
+  return(list(YPR=YPR, SPR=SPR, EU=EU))
 }
 ```
 
 
 ```{r}
-#Conduct size limit analysis
+###########
+#Conduct analysis
 
-#Get list of species included in analysis
+#Step 1. Define species list and format life history for LBSPR sim
 speciesUse<-subset(species, species$Use)
-
-#Create life history pars for each species
-MyParsList<-apply(speciesUse, 1, lh_function)
+#MyParsList<-apply(speciesUse[1,], 1, lh_function)
 MyParsList<-apply(speciesUse[which(species$Species == 'Naso unicornis'), ], 1, lh_function)
 
-#YPR and SPR analysis
+#Step 2. Run analysis function ypr_function
 SL_options<-c(0.9, 1, 1.1, 1.2, 1.3)
 FM_options<-c(0.5, 1, 2, 3)
 output<-ypr_function(MyParsList, SL_options, FM_options) 
-output
-
-
-###################
-#How about this?
-SPR<-output$SPR[[1]] 
-SPR_wide<-SPR %>% 
-  pivot_wider(id_cols=c(Name, Lc_mm, Lc_inch), names_from = FM, values_from = SPR)
-options(knitr.kable.NA = "")
-
-kable(SPR_wide, align = "llcccc", digits = 3) %>% 
-  kable_styling(bootstrap_options = "striped", 
-                full_width = TRUE,
-                position = "left"
-                ) %>% 
-  add_header_above(c("", "Size Limit" = 2, "F/M Value" = 4)) %>% 
-  add_header_above(c("Naso unicornis - SPR Values" = 7), align="l") %>% 
-  column_spec(1, bold = TRUE)
-
-YPR<-output$YPR[[1]] 
-YPR_wide<-YPR %>% 
-  pivot_wider(id_cols=c(Name, Lc_mm, Lc_inch), names_from = FM, values_from = YPR)
-options(knitr.kable.NA = "")
-
-kable(YPR_wide, align = "llcccc", digits = 3) %>% 
-  kable_styling(bootstrap_options = "striped", 
-                full_width = TRUE,
-                position = "left"
-                ) %>% 
-  add_header_above(c("", "Size Limit" = 2, "F/M Value" = 4)) %>% 
-  add_header_above(c("Naso unicornis - Relative YPR Values" = 7), align="l") %>% 
-  column_spec(1, bold = TRUE)
-###############
-
-
-# SPR data converted to data frame
-SPR <- as.data.frame(do.call(rbind, output$SPR[1])) %>% 
-  select(-c(Name)) 
-# SPR dataframe columns rearranged
-SPR_wide <- SPR %>% 
-  pivot_wider(names_from = FM, values_from = SPR) %>% 
-  arrange(Lc_mm) %>% 
-  rename("mm" = Lc_mm, "in" = Lc_inch)
-
-# SPR dataframe converted to visually appealing table
-options(knitr.kable.NA = "")
-
-kable(SPR_wide, align = "llcccc", digits = 3) %>% 
-  kable_styling(bootstrap_options = "striped", 
-                full_width = TRUE,
-                position = "left"
-                ) %>% 
-  add_header_above(c("Size Limit" = 2, "F/M Value" = 4)) %>% 
-  add_header_above(c("Naso unicornis - SPR Values" = 6)) %>% 
-  column_spec(1:2, bold = TRUE)
 
 ```
 
@@ -214,8 +170,222 @@ Variable F/M was determined based on F & M data from the Nadon et al. paper "Len
 
 
 ```{r}
+##########
+#Create data products for each species
+#Erin let's talk about how to organize this output) 
+#Can we make an R mark-down appendix 1 page for each species?
+
+#Five outputs for each species: two tables, two contour plots, trade-off Pareto plot 
+k<-1
+
+#Tables
+SPR<-output$SPR[[k]] 
+SPR_wide<-SPR %>% 
+  pivot_wider(id_cols=c(Name, Lc_mm, Lc_inch), names_from = FM, values_from = SPR)
+options(knitr.kable.NA = "")
+colnames(SPR_wide)<-c("Option", "mm", "inches", FM_options)
+nameIn<-paste0(MyParsList[[k]]$MyPars@Species, " - SPR Values")
+nameSPR<-c(nameIn = 7)
+names(nameSPR)<-c(paste0(MyParsList[[k]]$MyPars@Species, " - SPR Values"))
+kable(SPR_wide, align = "llcccc", digits = 3) %>% 
+  kable_styling(bootstrap_options = "striped", 
+                full_width = TRUE,
+                position = "left"
+                ) %>% 
+  add_header_above(c("", "Size Limit" = 2, "F/M Value" = 4)) %>% 
+  add_header_above(header = nameSPR, align="l") %>% 
+  column_spec(1, bold = TRUE)
+
+YPR<-output$YPR[[k]] 
+YPR_wide<-YPR %>% 
+  pivot_wider(id_cols=c(Name, Lc_mm, Lc_inch), names_from = FM, values_from = YPR)
+colnames(YPR_wide)<-c("Option", "mm", "inches", FM_options)
+options(knitr.kable.NA = "")
+nameYPR<-c(nameIn = 7)
+names(nameYPR)<-c(paste0(MyParsList[[k]]$MyPars@Species, " - YPR Values"))
+kable(YPR_wide, align = "llcccc", digits = 3) %>% 
+  kable_styling(bootstrap_options = "striped", 
+                full_width = TRUE,
+                position = "left"
+                ) %>% 
+  add_header_above(c("", "Size Limit" = 2, "F/M Value" = 4)) %>% 
+  add_header_above(header = nameYPR, align="l") %>% 
+  column_spec(1, bold = TRUE)
+
+#contour and pareto
+EU_grid<-expand.grid(Lc=output$EU[[k]]$Lc/25.4,
+                     F_M=output$EU[[k]]$F_M)
+EU_grid$ypr<-as.vector(t(output$EU[[k]]$YPR_EU))
+EU_grid$spr<-as.vector(t(output$EU[[k]]$SPR_EU))
+
+ggplot(EU_grid, aes(x=F_M, y=Lc, z=ypr)) + 
+  geom_contour_filled(binwidth=0.05) +
+  geom_hline(yintercept =output$EU[[k]]$L50/25.4, linetype="dashed", 
+                color = "black", size=2) +
+  labs(y="Lc (inches)", x = "F / M")+
+  guides(fill=guide_legend(
+    title = "YPR",
+    direction = "vertical",
+    title.position = "top",
+    label.position = "right",
+    label.hjust = 0.5,
+    label.vjust = 1))+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    panel.background = element_blank(), axis.line = element_line(colour = "black"),
+    legend.position = "right")
+
+ggplot(EU_grid, aes(x=F_M, y=Lc, z=spr)) + 
+  geom_contour_filled(binwidth=0.05) +
+  geom_hline(yintercept =output$EU[[k]]$L50/25.4, linetype="dashed", 
+                color = "black", size=2) +
+  labs(y="Lc (inches)", x = "F / M")+
+  guides(fill=guide_legend(
+    title = "SPR",
+    direction = "vertical",
+    title.position = "top",
+    label.position = "right",
+    label.hjust = 0.5,
+    label.vjust = 1))+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    panel.background = element_blank(), axis.line = element_line(colour = "black"),
+    legend.position = "right")
+
+###
+#Trade-off plot
+Flevel<-c(0,4)
+EU_tmp<-EU_grid %>%
+          filter(F_M > Flevel[1],
+                 F_M < Flevel[2])
+values<-c(0,
+          (output$EU[[k]]$L50/25.4-0.5)/max(EU_tmp$Lc)-0.01,
+          (output$EU[[k]]$L50/25.4-0.5)/max(EU_tmp$Lc),
+          (output$EU[[k]]$L50/25.4+0.5)/max(EU_tmp$Lc),
+          (output$EU[[k]]$L50/25.4+0.5)/max(EU_tmp$Lc)+0.01,
+          1)
+colors<-c("firebrick3","firebrick1","black","lightgreen","forestgreen")
+
+ggplot(EU_tmp, aes(x=ypr, y=spr)) +
+  geom_point(aes(colour = Lc)) +
+  scale_colour_gradientn(
+    name="Lc",
+    colors=colors,
+    values=values) +
+  ylim(0,1) +
+  xlim(0,1) +
+  annotate(geom="text", x=0.75, y=1, label=paste0(MyParsList[[k]]$MyPars@Species,", L50: ", round(output$EU[[k]]$L50/25.4,1), " inches")) +
+  labs(y="SPR", x = "Relative yield")+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    panel.background = element_blank(), axis.line = element_line(colour = "black"),
+    legend.position = "right")
+
+#Not planning to use p4, just interested in the pattern it produces
+#ggplot(EU_grid, aes(x=ypr, y=spr)) +
+#  geom_point(aes(colour = F_M)) +
+#  scale_colour_gradient2(
+#    name="F/M",
+#    low = "firebrick",
+#    mid = "lightyellow",
+#    high = "forestgreen",
+#    midpoint = 1) +
+#  labs(y="SPR", x = "Relative yield")+
+#  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+#    panel.background = element_blank(), axis.line = element_line(colour = "black"),
+#    legend.position = "right")
+
+###############
+#Erin's previous code 
+
+# SPR data converted to data frame
+#SPR <- as.data.frame(do.call(rbind, output$SPR[1])) %>% 
+#  select(-c(Name)) 
+# SPR dataframe columns rearranged
+#SPR_wide <- SPR %>% 
+#  pivot_wider(names_from = FM, values_from = SPR) %>% 
+#  arrange(Lc_mm) %>% 
+#  rename("mm" = Lc_mm, "in" = Lc_inch)
+
+# SPR dataframe converted to visually appealing table
+#options(knitr.kable.NA = "")
+
+#kable(SPR_wide, align = "llcccc", digits = 3) %>% 
+#  kable_styling(bootstrap_options = "striped", 
+#                full_width = TRUE,
+#                position = "left"
+#                ) %>% 
+#  add_header_above(c("Size Limit" = 2, "F/M Value" = 4)) %>% 
+#  add_header_above(c("Naso unicornis - SPR Values" = 6)) %>% 
+#  column_spec(1:2, bold = TRUE)
 
 ```
 
 
+```{r}
+########################
+#Patterns across species
+#Create plots of overall patterns in the data useful for main part of report
+
+###############
+#Pareto - all (this may not be useful, just wanted to see what it would look like)
+allPareto<-data.frame()
+for(k in 1:NROW(output$EU)){
+  EU_grid<-expand.grid(Lc=output$EU[[k]]$Lc/output$EU[[k]]$L50,
+                     F_M=output$EU[[k]]$F_M)
+  EU_grid$ypr<-as.vector(t(output$EU[[k]]$YPR_EU))
+  EU_grid$spr<-as.vector(t(output$EU[[k]]$SPR_EU))
+  allPareto<-rbind(allPareto, EU_grid)
+}
+
+#
+Flevel<-c(0,4)
+EU_tmp<-allPareto %>%
+          filter(F_M > Flevel[1],
+                 F_M < Flevel[2])
+EU_tmp <- EU_tmp[order(EU_tmp$Lc),]
+values<-c(0,
+          (1-0.1)/max(EU_tmp$Lc)-0.01,
+          (1-0.1)/max(EU_tmp$Lc),
+          (1+0.1)/max(EU_tmp$Lc),
+          (1+0.1)/max(EU_tmp$Lc)+0.01,
+          1)
+colors<-c("firebrick3","firebrick1","black","lightgreen","forestgreen")
+
+ggplot(EU_tmp, aes(x=ypr, y=spr)) +
+  geom_point(aes(colour = Lc), shape=1) +
+  scale_colour_gradientn(
+    name="Lc / Lm",
+    colors=colors,
+    values=values) +
+  ylim(0,1) +
+  xlim(0,1) +
+  labs(y="SPR", x = "Relative yield")+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    panel.background = element_blank(), axis.line = element_line(colour = "black"),
+    legend.position = "right")
+
+##########################
+#Trends when SL50 = Lm for each all species
+SPR_Lm<-data.frame()
+YPR_Lm<-data.frame()
+for(k in 1:NROW(output$EU)){
+  x<-which(abs(output$EU[[k]]$Lc-output$EU[[k]]$L50)==min(abs(output$EU[[k]]$Lc-output$EU[[k]]$L50)))
+  SPR_Lm<-rbind(SPR_Lm, list(Species=rep(MyParsList[[k]]$MyPars@Species,NROW(output$EU[[k]]$SPR_EU[,x])),  SPR=output$EU[[k]]$SPR_EU[,x],F_M=output$EU[[k]]$F_M))
+  YPR_Lm<-rbind(YPR_Lm, list(Species=rep(MyParsList[[k]]$MyPars@Species,NROW(output$EU[[k]]$SPR_EU[,x])), YPR=output$EU[[k]]$YPR_EU[,x], F_M=output$EU[[k]]$F_M))
+}
+
+ggplot(SPR_Lm, aes(x=F_M, y=SPR)) +
+  geom_line(aes(colour = Species)) +
+  labs(y="SPR", x = "F/M") +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    panel.background = element_blank(), axis.line = element_line(colour = "black"),
+    legend.position = "right")
+
+ggplot(YPR_Lm, aes(x=F_M, y=YPR)) +
+  geom_line(aes(colour = Species)) +
+  labs(y="YPR", x = "F/M") +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    panel.background = element_blank(), axis.line = element_line(colour = "black"),
+    legend.position = "right")
+
+
+```
 
