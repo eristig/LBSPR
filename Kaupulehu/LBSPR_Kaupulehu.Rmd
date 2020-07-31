@@ -16,6 +16,8 @@ library(janitor)
 library(LBSPR)
 library(dplyr)
 library(kableExtra)
+library(ggalt)
+library(ggrepel)
 
 # Read in CSV
 species <- read_csv(here::here("Kaupulehu", "Species_List.csv"))
@@ -159,7 +161,7 @@ MyParsList<-apply(speciesUse[which(species$Species == 'Naso unicornis'), ], 1, l
 
 #Step 2. Run analysis function ypr_function
 SL_options<-c(0.9, 1, 1.1, 1.2, 1.3)
-FM_options<-c(0.5, 1, 2, 3)
+FM_options<-c(1, 2, 3)
 output<-ypr_function(MyParsList, SL_options, FM_options) 
 
 ```
@@ -183,32 +185,35 @@ SPR<-output$SPR[[k]]
 SPR_wide<-SPR %>% 
   pivot_wider(id_cols=c(Name, Lc_mm, Lc_inch), names_from = FM, values_from = SPR)
 options(knitr.kable.NA = "")
-colnames(SPR_wide)<-c("Option", "mm", "inches", FM_options)
-nameIn<-paste0(MyParsList[[k]]$MyPars@Species, " - SPR Values")
-nameSPR<-c(nameIn = 7)
+colnames(SPR_wide)<-c("Option", "mm", "inches", "L", "M", "H")
+nameSPR<-c(NCOL(SPR_wide))
 names(nameSPR)<-c(paste0(MyParsList[[k]]$MyPars@Species, " - SPR Values"))
+namesSub<-c(1,2,(NCOL(SPR_wide)-3))
+names(namesSub)<-c(" ", "Size Limit", "F/M Value")
 kable(SPR_wide, align = "llcccc", digits = 3) %>% 
   kable_styling(bootstrap_options = "striped", 
                 full_width = TRUE,
                 position = "left"
                 ) %>% 
-  add_header_above(c("", "Size Limit" = 2, "F/M Value" = 4)) %>% 
+  add_header_above(header = namesSub) %>% 
   add_header_above(header = nameSPR, align="l") %>% 
   column_spec(1, bold = TRUE)
 
 YPR<-output$YPR[[k]] 
 YPR_wide<-YPR %>% 
   pivot_wider(id_cols=c(Name, Lc_mm, Lc_inch), names_from = FM, values_from = YPR)
-colnames(YPR_wide)<-c("Option", "mm", "inches", FM_options)
+colnames(YPR_wide)<-c("Option", "mm", "inches", "L", "M", "H")
 options(knitr.kable.NA = "")
-nameYPR<-c(nameIn = 7)
+nameYPR<-c(NCOL(SPR_wide))
 names(nameYPR)<-c(paste0(MyParsList[[k]]$MyPars@Species, " - YPR Values"))
+namesSub<-c(1,2,(NCOL(SPR_wide)-3))
+names(namesSub)<-c(" ", "Size Limit", "F/M Value")
 kable(YPR_wide, align = "llcccc", digits = 3) %>% 
   kable_styling(bootstrap_options = "striped", 
                 full_width = TRUE,
                 position = "left"
                 ) %>% 
-  add_header_above(c("", "Size Limit" = 2, "F/M Value" = 4)) %>% 
+  add_header_above(header = namesSub) %>% 
   add_header_above(header = nameYPR, align="l") %>% 
   column_spec(1, bold = TRUE)
 
@@ -264,8 +269,8 @@ values<-c(0,
           1)
 colors<-c("firebrick3","firebrick1","black","lightgreen","forestgreen")
 
-ggplot(EU_tmp, aes(x=ypr, y=spr)) +
-  geom_point(aes(colour = Lc)) +
+ggplot(EU_tmp, aes(x=ypr, y=spr, colour=Lc)) +
+  geom_point() +
   scale_colour_gradientn(
     name="Lc",
     colors=colors,
@@ -277,6 +282,29 @@ ggplot(EU_tmp, aes(x=ypr, y=spr)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
     panel.background = element_blank(), axis.line = element_line(colour = "black"),
     legend.position = "right")
+
+dt=data.frame(YPR=output$YPR[[k]]$YPR[output$YPR[[k]]$Name != "Current size limit"],
+              SPR=output$SPR[[k]]$SPR[output$SPR[[k]]$Name != "Current size limit"],
+              Lc= output$SPR[[k]]$Lc_inch[output$SPR[[k]]$Name != "Current size limit"],
+              F_M=factor(output$SPR[[k]]$FM[output$SPR[[k]]$Name != "Current size limit"],labels=c("L", "M", "H")))
+ggplot(dt, aes(x=YPR, y=SPR, colour=Lc)) +
+  geom_point() +
+  scale_colour_gradientn(
+    name="Lc",
+    colors=colors,
+    values=values,
+    limits=c(min(EU_tmp$Lc), max(EU_tmp$Lc))) +
+  geom_label_repel(aes(label = paste0(Lc,F_M)),
+                  segment.color = 'grey50') +
+  geom_encircle(data=EU_tmp, aes(x=ypr, y=spr, colour=Lc), s_shape=1, expand=0.07, colour="lightgrey")+
+  ylim(0,1) +
+  xlim(0,1) +
+  annotate(geom="text", x=0.75, y=1, label=paste0(MyParsList[[k]]$MyPars@Species,", L50: ", round(output$EU[[k]]$L50/25.4,1), " inches")) +
+  labs(y="SPR", x = "Relative yield")+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    panel.background = element_blank(), axis.line = element_line(colour = "black"),
+    legend.position = "right")
+
 
 #Not planning to use p4, just interested in the pattern it produces
 #ggplot(EU_grid, aes(x=ypr, y=spr)) +
